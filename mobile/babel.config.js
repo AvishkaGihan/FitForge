@@ -1,7 +1,26 @@
-export default function (api) {
+module.exports = function (api) {
   api.cache(true);
   return {
-    presets: ["babel-preset-expo"],
-    plugins: ["react-native-reanimated/plugin"], // Add this line
+    presets: ['babel-preset-expo'],
+    plugins: [
+      'react-native-reanimated/plugin', // This was the plugin we added manually before
+      [
+        'module-resolver', // This is new: adds support for path aliases
+        {
+          root: ['./src'],
+          extensions: ['.ios.js', '.android.js', '.js', '.ts', '.tsx', '.json'],
+          alias: {
+            '@': './src',
+            '@components': './src/components',
+            '@screens': './src/screens',
+            '@services': './src/services',
+            '@hooks': './src/hooks',
+            '@utils': './src/utils',
+            '@types': './src/types',
+            '@contexts': './src/contexts',
+          },
+        },
+      ],
+    ],
   };
-}
+};
