@@ -13,8 +13,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/contexts/AuthContext';
-import { Button } from '@/components/Button
-import { Input } from '@/components/Input
+import { Button } from '@/components/Button';
+import { Input } from '@/components/Input';
 import { registerSchema } from '@/utils/validation';
 
 export function RegisterScreen() {
