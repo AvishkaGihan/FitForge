@@ -1,0 +1,20 @@
+{
+  "name": "fitforge",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "mobile",
+    "backend",
+    "packages/*"
+  ],
+  "scripts": {
+    "mobile": "npm run start --workspace=mobile",
+    "backend": "npm run dev --workspace=backend",
+    "dev": "concurrently \"npm run mobile\" \"npm run backend\"",
+    "install-all": "npm install && npm install --workspaces",
+    "clean": "rm -rf node_modules mobile/node_modules backend/node_modules packages/*/node_modules"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
