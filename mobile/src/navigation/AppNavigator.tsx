@@ -1,50 +1,41 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useAuth } from '@/contexts/AuthContext';
-import { LoadingSpinner } from '@/components/LoadingSpinner';
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Text, View } from "react-native";
 
-import { SplashScreen } from '../screens/SplashScreen';
-import { AuthNavigator } from './AuthNavigator';
-import { OnboardingNavigator } from './OnboardingNavigator';
-import { MainNavigator } from './MainNavigator';
-import { storage } from '@/utils/storage';
+const Tab = createBottomTabNavigator();
 
-const Stack = createNativeStackNavigator();
+// Placeholder screens
+const HomeScreen = () => (
+  <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <Text>Home</Text>
+  </View>
+);
+const WorkoutsScreen = () => (
+  <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <Text>Workouts</Text>
+  </View>
+);
+const ChatScreen = () => (
+  <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <Text>Chat</Text>
+  </View>
+);
+const ProfileScreen = () => (
+  <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <Text>Profile</Text>
+  </View>
+);
 
-export function AppNavigator() {
-  const { isAuthenticated, loading } = useAuth();
-  const [onboardingComplete, setOnboardingComplete] = React.useState<boolean | null>(null);
-
-  React.useEffect(() => {
-    checkOnboarding();
-  }, [isAuthenticated]);
-
-  async function checkOnboarding() {
-    if (isAuthenticated) {
-      const complete = await storage.isOnboardingComplete();
-      setOnboardingComplete(complete);
-    }
-  }
-
-  if (loading || (isAuthenticated && onboardingComplete === null)) {
-    return <LoadingSpinner />;
-  }
-
+export const AppNavigator = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {!isAuthenticated ? (
-          <>
-            <Stack.Screen name="Splash" component={SplashScreen} />
-            <Stack.Screen name="Auth" component={AuthNavigator} />
-          </>
-        ) : !onboardingComplete ? (
-          <Stack.Screen name="Onboarding" component={OnboardingNavigator} />
-        ) : (
-          <Stack.Screen name="Main" component={MainNavigator} />
-        )}
-      </Stack.Navigator>
+      <Tab.Navigator>
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Workouts" component={WorkoutsScreen} />
+        <Tab.Screen name="Chat" component={ChatScreen} />
+        <Tab.Screen name="Profile" component={ProfileScreen} />
+      </Tab.Navigator>
     </NavigationContainer>
   );
-}
+};
