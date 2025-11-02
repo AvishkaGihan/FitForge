@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "dark",
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
@@ -14,17 +14,42 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.avishkagihan.fitforge"
+      "bundleIdentifier": "com.avishkagihan.fitforge",
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "FitForge uses Face ID to provide secure and convenient login access to your fitness data.",
+        "NSCameraUsageDescription": "FitForge needs camera access to scan exercise demonstration videos."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#1A1A1D"
       },
-      "package": "com.avishkagihan.fitforge"
+      "package": "com.avishkagihan.fitforge",
+      "permissions": ["USE_BIOMETRIC", "USE_FINGERPRINT"]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
     },
     "extra": {
-      "apiUrl": "http://10.0.2.2:3000/api"
-    }
+      "apiUrl": "http://10.0.2.2:3000/api",
+      "eas": {
+        "projectId": "your-project-id"
+      }
+    },
+    "plugins": [
+      "expo-secure-store",
+      "expo-local-authentication",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/Inter-Regular.ttf",
+            "./assets/fonts/Inter-Bold.ttf",
+            "./assets/fonts/Inter-SemiBold.ttf"
+          ]
+        }
+      ]
+    ]
   }
 }
