@@ -89,8 +89,18 @@ export function TimeFrequencyScreen() {
       </ScrollView>
 
       <View style={styles.footer}>
-        <Button title="Back" onPress={() => navigation.goBack()} variant="outline" />
-        <Button title="Next" onPress={handleNext} disabled={!selectedTime || !selectedDays} />
+        <Button
+          title="Back"
+          onPress={() => navigation.goBack()}
+          variant="outline"
+          style={styles.button}
+        />
+        <Button
+          title="Next"
+          onPress={handleNext}
+          disabled={!selectedTime || !selectedDays}
+          style={styles.button}
+        />
       </View>
     </SafeAreaView>
   );
@@ -168,5 +178,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 24,
     gap: 12,
+  },
+  button: {
+    flex: 1,
   },
 });

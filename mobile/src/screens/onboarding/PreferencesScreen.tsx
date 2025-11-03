@@ -127,8 +127,13 @@ export function PreferencesScreen() {
       </ScrollView>
 
       <View style={styles.footer}>
-        <Button title="Back" onPress={() => navigation.goBack()} variant="outline" />
-        <Button title="Next" onPress={handleNext} />
+        <Button
+          title="Back"
+          onPress={() => navigation.goBack()}
+          variant="outline"
+          style={styles.button}
+        />
+        <Button title="Next" onPress={handleNext} style={styles.button} />
       </View>
     </SafeAreaView>
   );
@@ -196,5 +201,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 24,
     gap: 12,
+  },
+  button: {
+    flex: 1,
   },
 });

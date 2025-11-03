@@ -139,8 +139,18 @@ export function ProfileSummaryScreen() {
       </ScrollView>
 
       <View style={styles.footer}>
-        <Button title="Back" onPress={() => navigation.goBack()} variant="outline" />
-        <Button title="Complete Setup" onPress={handleComplete} loading={loading} />
+        <Button
+          title="Back"
+          onPress={() => navigation.goBack()}
+          variant="outline"
+          style={styles.button}
+        />
+        <Button
+          title="Complete Setup"
+          onPress={handleComplete}
+          loading={loading}
+          style={styles.button}
+        />
       </View>
     </SafeAreaView>
   );
@@ -203,5 +213,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 24,
     gap: 12,
+  },
+  button: {
+    flex: 1,
   },
 });

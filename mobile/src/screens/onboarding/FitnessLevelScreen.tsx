@@ -86,11 +86,17 @@ export function FitnessLevelScreen() {
       </ScrollView>
 
       <View style={styles.footer}>
-        <Button title="Back" onPress={() => navigation.goBack()} variant="outline" />
+        <Button
+          title="Back"
+          onPress={() => navigation.goBack()}
+          variant="outline"
+          style={styles.button}
+        />
         <Button
           title="Next"
           onPress={handleNext}
           disabled={!selectedLevel || selectedEquipment.length === 0}
+          style={styles.button}
         />
       </View>
     </SafeAreaView>
@@ -156,5 +162,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 24,
     gap: 12,
+  },
+  button: {
+    flex: 1,
   },
 });
