@@ -68,6 +68,7 @@ export function Button({
       disabled={isDisabled}
       style={[
         styles.container,
+        styles.secondaryContainer,
         { height: buttonHeight },
         variant === 'secondary' && { backgroundColor: colors.surface },
         variant === 'outline' && {
@@ -103,6 +104,10 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     overflow: 'hidden',
   },
+  secondaryContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   gradient: {
     flex: 1,
     justifyContent: 'center',
@@ -112,6 +117,7 @@ const styles = StyleSheet.create({
   text: {
     color: '#FFFFFF',
     fontWeight: '600',
+    textAlign: 'center',
   },
   disabled: {
     opacity: 0.5,
