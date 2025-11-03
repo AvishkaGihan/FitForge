@@ -7,7 +7,7 @@ import { logger } from "../utils/logger";
 export class ChatController {
   private chatService = new ChatService();
 
-  async sendMessage(req: AuthRequest, res: Response): Promise<void> {
+  sendMessage = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       if (!req.user) {
         res.status(401).json({ error: "Unauthorized" });
@@ -29,9 +29,9 @@ export class ChatController {
       logger.error("Chat message error:", error);
       res.status(500).json({ error: "Failed to process message" });
     }
-  }
+  };
 
-  async getMessages(req: AuthRequest, res: Response): Promise<void> {
+  getMessages = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       if (!req.user) {
         res.status(401).json({ error: "Unauthorized" });
@@ -49,5 +49,5 @@ export class ChatController {
       logger.error("Get messages error:", error);
       res.status(500).json({ error: "Failed to fetch messages" });
     }
-  }
+  };
 }

@@ -38,7 +38,7 @@ export class WorkoutGeneratorService {
 
     this.model = new ChatGoogleGenerativeAI({
       apiKey,
-      model: "gemini-1.5-flash",
+      model: "gemini-2.5-flash",
       temperature: 0.7,
       maxOutputTokens: 2048,
     });
