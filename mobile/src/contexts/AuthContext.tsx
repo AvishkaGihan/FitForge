@@ -46,9 +46,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function checkBiometricAvailability() {
-    const compatible = await LocalAuthentication.hasHardwareAsync();
-    const enrolled = await LocalAuthentication.isEnrolledAsync();
-    setIsBiometricAvailable(compatible && enrolled);
+    try {
+      const compatible = await LocalAuthentication.hasHardwareAsync();
+      const enrolled = await LocalAuthentication.isEnrolledAsync();
+      setIsBiometricAvailable(compatible && enrolled);
+    } catch (error) {
+      console.error('Biometric check error:', error);
+      setIsBiometricAvailable(false);
+    }
   }
 
   async function login(email: string, password: string) {

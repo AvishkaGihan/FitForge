@@ -27,7 +27,7 @@ export default function App() {
           'Inter-SemiBold': require('./assets/fonts/Inter-SemiBold.ttf'),
         });
 
-        // Artificially delay for splash screen animation
+        // Delay for splash screen animation
         await new Promise(resolve => setTimeout(resolve, 1500));
       } catch (e) {
         console.warn(e);
@@ -38,6 +38,17 @@ export default function App() {
 
     prepare();
   }, []);
+
+  // Fallback to ensure splash is hidden on Android
+  useEffect(() => {
+    if (appIsReady) {
+      const timer = setTimeout(() => {
+        SplashScreen.hideAsync().catch(console.warn);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+    return undefined;
+  }, [appIsReady]);
 
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {

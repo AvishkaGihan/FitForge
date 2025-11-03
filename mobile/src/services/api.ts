@@ -39,7 +39,6 @@ class ApiClient {
         if (error.response?.status === 401) {
           // Token expired or invalid
           await storage.clearAuthToken();
-          // You might want to trigger a logout event here
         }
         return Promise.reject(error);
       }

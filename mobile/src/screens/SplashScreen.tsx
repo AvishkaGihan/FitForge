@@ -8,23 +8,15 @@ import Animated, {
 } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useTheme } from '@/contexts/ThemeContext';
-import { useNavigation } from '@react-navigation/native';
 
 export function SplashScreen() {
   const { colors } = useTheme();
-  const navigation = useNavigation();
   const scale = useSharedValue(0);
   const opacity = useSharedValue(0);
 
   useEffect(() => {
     scale.value = withSpring(1, { damping: 10 });
     opacity.value = withTiming(1, { duration: 800 });
-
-    const timeout = setTimeout(() => {
-      navigation.navigate('Auth' as never);
-    }, 2000);
-
-    return () => clearTimeout(timeout);
   }, []);
 
   const animatedStyle = useAnimatedStyle(() => ({
