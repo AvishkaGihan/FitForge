@@ -25,6 +25,28 @@ interface WorkoutPlan {
   }>;
 }
 
+// Type guard function to validate workout plan structure
+function isValidWorkoutPlan(obj: any): obj is WorkoutPlan {
+  return (
+    obj &&
+    typeof obj === "object" &&
+    typeof obj.name === "string" &&
+    obj.name.trim().length > 0 &&
+    typeof obj.estimatedDuration === "number" &&
+    obj.estimatedDuration > 0 &&
+    Array.isArray(obj.exercises) &&
+    obj.exercises.length > 0 &&
+    obj.exercises.every(
+      (exercise: any) =>
+        exercise &&
+        typeof exercise.name === "string" &&
+        typeof exercise.sets === "number" &&
+        typeof exercise.reps === "string" &&
+        typeof exercise.rest === "number"
+    )
+  );
+}
+
 export class WorkoutGeneratorService {
   private model: ChatGoogleGenerativeAI;
   private parser: JsonOutputParser;
@@ -38,7 +60,7 @@ export class WorkoutGeneratorService {
 
     this.model = new ChatGoogleGenerativeAI({
       apiKey,
-      model: "gemini-2.5-flash",
+      model: "gemini-1.5-flash",
       temperature: 0.7,
       maxOutputTokens: 2048,
     });
@@ -68,22 +90,22 @@ Create a workout plan that matches this profile. The workout should:
 5. Avoid restricted exercises
 6. Include preferred exercises when possible
 
-Return ONLY valid JSON in this exact format (no markdown, no extra text):
-{{
-  "name": "Descriptive workout name",
-  "estimatedDuration": <number in minutes>,
+CRITICAL: Return ONLY valid JSON in this exact format (no markdown, no extra text, no code blocks):
+{
+  "name": "Descriptive workout name (required, non-empty string)",
+  "estimatedDuration": <number in minutes, must be positive>,
   "exercises": [
-    {{
-      "name": "Exercise name",
-      "sets": <number>,
-      "reps": "rep range or duration",
-      "rest": <seconds>,
-      "notes": "Form tips or modifications"
-    }}
+    {
+      "name": "Exercise name (required, non-empty string)",
+      "sets": <number, must be positive>,
+      "reps": "rep range or duration (required, non-empty string)",
+      "rest": <seconds, must be positive>,
+      "notes": "Form tips or modifications (optional)"
+    }
   ]
-}}
+}
 
-Include 5-8 exercises with proper warm-up considerations.
+Include 5-8 exercises with proper warm-up considerations. The 'name' field MUST be a non-empty string.
 `);
 
       const chain = prompt.pipe(this.model).pipe(this.parser);
@@ -98,11 +120,173 @@ Include 5-8 exercises with proper warm-up considerations.
         preferred: profile.preferred_exercises.join(", ") || "no preference",
       });
 
+      logger.info("Raw API response:", result);
+
+      // Validate the response structure
+      if (!isValidWorkoutPlan(result)) {
+        logger.error("Invalid workout plan structure:", result);
+        throw new Error(
+          "AI returned invalid workout plan format. Please try again."
+        );
+      }
+
       logger.info("Workout generated successfully");
-      return result as WorkoutPlan;
+      return result;
     } catch (error) {
       logger.error("Workout generation error:", error);
-      throw new Error("Failed to generate workout plan");
+
+      // Provide more specific error messages
+      if (error instanceof Error) {
+        if (error.message.includes("API_KEY")) {
+          throw new Error("Invalid or missing Google Gemini API key");
+        }
+        if (
+          error.message.includes("quota") ||
+          error.message.includes("rate limit")
+        ) {
+          throw new Error(
+            "Google Gemini API quota exceeded. Please try again later."
+          );
+        }
+        if (
+          error.message.includes("model") ||
+          error.message.includes("not found")
+        ) {
+          throw new Error("Invalid Gemini model specified");
+        }
+      }
+
+      // Fallback: Generate a basic workout if AI fails
+      logger.warn("AI generation failed, using fallback workout");
+      return this.generateFallbackWorkout(profile);
     }
+  }
+
+  // Fallback workout generator for when AI fails
+  private generateFallbackWorkout(profile: UserProfile): WorkoutPlan {
+    const baseExercises = {
+      "Lose Weight": [
+        {
+          name: "Jumping Jacks",
+          sets: 3,
+          reps: "30 seconds",
+          rest: 30,
+          notes: "Keep a steady pace",
+        },
+        {
+          name: "Push-ups",
+          sets: 3,
+          reps: "8-12 reps",
+          rest: 60,
+          notes: "Modify on knees if needed",
+        },
+        {
+          name: "Squats",
+          sets: 3,
+          reps: "10-15 reps",
+          rest: 60,
+          notes: "Keep knees behind toes",
+        },
+        {
+          name: "Plank",
+          sets: 3,
+          reps: "20-30 seconds",
+          rest: 45,
+          notes: "Keep body straight",
+        },
+        {
+          name: "Burpees",
+          sets: 3,
+          reps: "5-8 reps",
+          rest: 60,
+          notes: "Modify without jump if needed",
+        },
+      ],
+      "Build Muscle": [
+        {
+          name: "Push-ups",
+          sets: 4,
+          reps: "8-12 reps",
+          rest: 90,
+          notes: "Full range of motion",
+        },
+        {
+          name: "Squats",
+          sets: 4,
+          reps: "10-15 reps",
+          rest: 90,
+          notes: "Go deep but keep form",
+        },
+        {
+          name: "Lunges",
+          sets: 3,
+          reps: "8-10 reps per leg",
+          rest: 60,
+          notes: "Alternate legs",
+        },
+        {
+          name: "Mountain Climbers",
+          sets: 3,
+          reps: "20 reps per leg",
+          rest: 45,
+          notes: "Keep core engaged",
+        },
+        {
+          name: "Superman",
+          sets: 3,
+          reps: "10-15 reps",
+          rest: 60,
+          notes: "Lift arms and legs off ground",
+        },
+      ],
+      "Improve Endurance": [
+        {
+          name: "High Knees",
+          sets: 3,
+          reps: "45 seconds",
+          rest: 30,
+          notes: "Drive knees up high",
+        },
+        {
+          name: "Jumping Jacks",
+          sets: 4,
+          reps: "1 minute",
+          rest: 30,
+          notes: "Continuous motion",
+        },
+        {
+          name: "Burpees",
+          sets: 3,
+          reps: "10 reps",
+          rest: 60,
+          notes: "Full movement",
+        },
+        {
+          name: "Mountain Climbers",
+          sets: 3,
+          reps: "45 seconds",
+          rest: 45,
+          notes: "Fast pace",
+        },
+        {
+          name: "Squats",
+          sets: 3,
+          reps: "15-20 reps",
+          rest: 45,
+          notes: "Quick tempo",
+        },
+      ],
+    };
+
+    const exercises =
+      baseExercises[profile.fitness_goal as keyof typeof baseExercises] ||
+      baseExercises["Improve Endurance"];
+    const estimatedDuration = Math.min(profile.time_per_workout, 45);
+
+    return {
+      name: `${profile.fitness_goal} Workout - ${profile.fitness_level} Level`,
+      estimatedDuration,
+      exercises: exercises.slice(0, Math.floor(estimatedDuration / 8)), // Adjust exercise count based on time
+    };
   }
 }

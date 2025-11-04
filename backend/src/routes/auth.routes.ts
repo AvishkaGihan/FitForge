@@ -10,10 +10,22 @@ const authController = new AuthController();
 router.post(
   "/register",
   validateRequest(RegisterSchema),
-  authController.register
+  authController.register.bind(authController)
 );
-router.post("/login", validateRequest(LoginSchema), authController.login);
-router.post("/logout", authenticate, authController.logout);
-router.get("/me", authenticate, authController.getCurrentUser);
+router.post(
+  "/login",
+  validateRequest(LoginSchema),
+  authController.login.bind(authController)
+);
+router.post(
+  "/logout",
+  authenticate,
+  authController.logout.bind(authController)
+);
+router.get(
+  "/me",
+  authenticate,
+  authController.getCurrentUser.bind(authController)
+);
 
 export default router;

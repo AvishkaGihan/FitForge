@@ -11,8 +11,12 @@ router.post(
   "/message",
   authenticate,
   validateRequest(ChatMessageSchema),
-  chatController.sendMessage
+  chatController.sendMessage.bind(chatController)
 );
-router.get("/messages", authenticate, chatController.getMessages);
+router.get(
+  "/messages",
+  authenticate,
+  chatController.getMessages.bind(chatController)
+);
 
 export default router;

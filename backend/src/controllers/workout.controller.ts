@@ -20,10 +20,35 @@ export class WorkoutController {
       // Generate workout using AI
       const workout = await this.workoutGenerator.generateWorkout(profile);
 
+      // Validate workout data before saving
+      if (!workout || !workout.name || !workout.name.trim()) {
+        logger.error("Invalid workout generated - missing name:", workout);
+        res
+          .status(503)
+          .json({
+            error: "Failed to generate valid workout. Please try again.",
+          });
+        return;
+      }
+
+      if (
+        !workout.exercises ||
+        !Array.isArray(workout.exercises) ||
+        workout.exercises.length === 0
+      ) {
+        logger.error("Invalid workout generated - no exercises:", workout);
+        res
+          .status(503)
+          .json({
+            error: "Failed to generate workout exercises. Please try again.",
+          });
+        return;
+      }
+
       // Save to database
       const savedWorkout = await db.createWorkoutPlan({
         user_id: req.user.id,
-        name: workout.name,
+        name: workout.name.trim(),
         exercises: workout.exercises,
         estimated_duration: workout.estimatedDuration,
         difficulty: profile.fitness_level,

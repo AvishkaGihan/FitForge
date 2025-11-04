@@ -7,13 +7,21 @@ import { UserProfileSchema } from "../utils/validation";
 const router = Router();
 const userController = new UserController();
 
-router.get("/profile", authenticate, userController.getProfile);
+router.get(
+  "/profile",
+  authenticate,
+  userController.getProfile.bind(userController)
+);
 router.patch(
   "/profile",
   authenticate,
   validateRequest(UserProfileSchema),
-  userController.updateProfile
+  userController.updateProfile.bind(userController)
 );
-router.get("/stats", authenticate, userController.getStats);
+router.get(
+  "/stats",
+  authenticate,
+  userController.getStats.bind(userController)
+);
 
 export default router;
