@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -131,10 +131,7 @@ export function WorkoutsListScreen() {
           {loading && !refreshing ? (
             <LoadingSpinner />
           ) : error ? (
-            <ErrorMessage
-              message={error}
-              onRetry={loadWorkouts}
-            />
+            <ErrorMessage message={error} onRetry={loadWorkouts} />
           ) : (
             <FlatList
               data={workouts}
