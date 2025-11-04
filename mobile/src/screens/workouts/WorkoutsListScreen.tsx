@@ -1,42 +1,56 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useNavigation, NavigationProp, useFocusEffect } from '@react-navigation/native';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Card } from '@/components/Card';
 import { Badge } from '@/components/Badge';
 import { Button } from '@/components/Button';
 import { EmptyState } from '@/components/EmptyState';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
+import { ErrorMessage } from '@/components/ErrorMessage';
 import { formatDuration, formatDate } from '@/utils/helpers';
 import { WorkoutPlan, HomeStackParamList } from '@/types';
-
-// Mock data for demo
-const MOCK_WORKOUTS: WorkoutPlan[] = [
-  {
-    id: '1',
-    user_id: '1',
-    name: 'Full Body Strength',
-    exercises: [],
-    estimated_duration: 45,
-    difficulty: 'Intermediate',
-    created_at: new Date().toISOString(),
-  },
-  {
-    id: '2',
-    user_id: '1',
-    name: 'Upper Body Focus',
-    exercises: [],
-    estimated_duration: 30,
-    difficulty: 'Beginner',
-    created_at: new Date(Date.now() - 86400000).toISOString(),
-  },
-];
+import { api } from '@/services/api';
 
 export function WorkoutsListScreen() {
   const { colors } = useTheme();
   const navigation = useNavigation<NavigationProp<HomeStackParamList>>();
   const [selectedTab, setSelectedTab] = useState<'my' | 'library'>('my');
+  const [workouts, setWorkouts] = useState<WorkoutPlan[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
+
+  // Fetch workouts when screen comes into focus
+  useFocusEffect(
+    React.useCallback(() => {
+      loadWorkouts();
+    }, [])
+  );
+
+  async function loadWorkouts() {
+    try {
+      setError(null);
+      const data = await api.getUserWorkouts(20);
+      setWorkouts(Array.isArray(data) ? data : []);
+    } catch (err: any) {
+      setError(err.message || 'Failed to fetch workouts');
+      console.error('Error loading workouts:', err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function onRefresh() {
+    setRefreshing(true);
+    try {
+      await loadWorkouts();
+    } finally {
+      setRefreshing(false);
+    }
+  }
 
   function renderWorkout({ item }: { item: WorkoutPlan }) {
     return (
@@ -113,22 +127,40 @@ export function WorkoutsListScreen() {
       </View>
 
       {selectedTab === 'my' ? (
-        <FlatList
-          data={MOCK_WORKOUTS}
-          renderItem={renderWorkout}
-          keyExtractor={item => item.id}
-          contentContainerStyle={styles.list}
-          showsVerticalScrollIndicator={false}
-          ListEmptyComponent={
-            <EmptyState
-              icon="dumbbell"
-              title="No workouts yet"
-              description="Generate your first AI-powered workout"
-              actionLabel="Generate Workout"
-              onAction={() => navigation.navigate('HomeTab' as never)}
+        <>
+          {loading && !refreshing ? (
+            <LoadingSpinner />
+          ) : error ? (
+            <ErrorMessage
+              message={error}
+              onRetry={loadWorkouts}
             />
-          }
-        />
+          ) : (
+            <FlatList
+              data={workouts}
+              renderItem={renderWorkout}
+              keyExtractor={item => item.id}
+              contentContainerStyle={styles.list}
+              showsVerticalScrollIndicator={false}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
+                  tintColor={colors.primary}
+                />
+              }
+              ListEmptyComponent={
+                <EmptyState
+                  icon="dumbbell"
+                  title="No workouts yet"
+                  description="Generate your first AI-powered workout"
+                  actionLabel="Generate Workout"
+                  onAction={() => navigation.navigate('HomeTab' as never)}
+                />
+              }
+            />
+          )}
+        </>
       ) : (
         <View style={styles.libraryContainer}>
           <Button
