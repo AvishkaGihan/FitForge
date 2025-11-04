@@ -1,6 +1,7 @@
 {
   "name": "fitforge",
   "version": "1.0.0",
+  "description": "AI-powered fitness app with personalized workouts and coaching",
   "private": true,
   "workspaces": [
     "mobile",
@@ -12,9 +13,35 @@
     "backend": "npm run dev --workspace=backend",
     "dev": "concurrently \"npm run mobile\" \"npm run backend\"",
     "install-all": "npm install && npm install --workspaces",
-    "clean": "rm -rf node_modules mobile/node_modules backend/node_modules packages/*/node_modules"
+    "clean": "rm -rf node_modules mobile/node_modules backend/node_modules packages/*/node_modules",
+    "lint": "npm run lint --workspaces",
+    "test": "npm test --workspaces",
+    "build": "npm run build --workspace=backend",
+    "setup": "bash setup-github.sh"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
-  }
+  },
+  "keywords": [
+    "fitness",
+    "ai",
+    "react-native",
+    "expo",
+    "typescript",
+    "mobile-app",
+    "workout",
+    "health",
+    "langchain",
+    "gemini"
+  ],
+  "author": "Avishka Gihan <avishka.gihan@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AvishkaGihan/fitforge.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AvishkaGihan/fitforge/issues"
+  },
+  "homepage": "https://github.com/AvishkaGihan/fitforge#readme"
 }
