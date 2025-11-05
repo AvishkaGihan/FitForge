@@ -23,11 +23,9 @@ export class WorkoutController {
       // Validate workout data before saving
       if (!workout || !workout.name || !workout.name.trim()) {
         logger.error("Invalid workout generated - missing name:", workout);
-        res
-          .status(503)
-          .json({
-            error: "Failed to generate valid workout. Please try again.",
-          });
+        res.status(503).json({
+          error: "Failed to generate valid workout. Please try again.",
+        });
         return;
       }
 
@@ -37,11 +35,9 @@ export class WorkoutController {
         workout.exercises.length === 0
       ) {
         logger.error("Invalid workout generated - no exercises:", workout);
-        res
-          .status(503)
-          .json({
-            error: "Failed to generate workout exercises. Please try again.",
-          });
+        res.status(503).json({
+          error: "Failed to generate workout exercises. Please try again.",
+        });
         return;
       }
 
@@ -51,7 +47,6 @@ export class WorkoutController {
         name: workout.name.trim(),
         exercises: workout.exercises,
         estimated_duration: workout.estimatedDuration,
-        difficulty: profile.fitness_level,
       });
 
       res.json(savedWorkout);
@@ -137,7 +132,6 @@ export class WorkoutController {
         user_id: req.user.id,
         workout_plan_id: req.params.id,
         started_at: new Date().toISOString(),
-        total_duration,
         status: "In Progress",
       });
 

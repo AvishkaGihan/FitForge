@@ -29,7 +29,7 @@ export class AuthController {
       // Create user profile with defaults
       await db.createUserProfile({
         id: data.user.id,
-        email: data.user.email,
+        email: email,
         fitness_goal: "General Fitness",
         fitness_level: "Beginner",
         equipment: ["bodyweight"],
@@ -42,7 +42,7 @@ export class AuthController {
       res.status(201).json({
         user: {
           id: data.user.id,
-          email: data.user.email,
+          email: data.user.email || email,
         },
         session: data.session,
       });

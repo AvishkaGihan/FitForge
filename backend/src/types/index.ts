@@ -2,7 +2,7 @@
 export interface User {
   id: string;
   email: string;
-  password_hash: string;
+  password_hash?: string;
   first_name?: string;
   last_name?: string;
   age?: number;
@@ -11,11 +11,12 @@ export interface User {
   fitness_goal: string;
   equipment: string[];
   time_per_workout: number;
+  days_per_week: number;
   restrictions?: string;
   avoided_exercises: string[];
   preferred_exercises: string[];
   created_at: string;
-  updated_at: string;
+  updated_at?: string;
 }
 
 export interface UserProfileUpdate {
@@ -60,7 +61,7 @@ export interface WorkoutPlan {
   exercises: WorkoutExercise[];
   estimated_duration: number;
   created_at: string;
-  updated_at: string;
+  updated_at?: string;
 }
 
 export interface WorkoutExercise {
@@ -78,12 +79,13 @@ export interface WorkoutSession {
   started_at: string;
   status: "In Progress" | "Completed" | "Abandoned";
   completed_at?: string;
-  created_at: string;
+  created_at?: string;
 }
 
 export interface WorkoutSessionCompletion {
-  exercises_completed: number;
-  total_duration: number;
+  exercises_completed?: number;
+  total_duration?: number;
+  feedback?: string;
   notes?: string;
 }
 

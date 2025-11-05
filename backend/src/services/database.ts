@@ -44,9 +44,7 @@ export class DatabaseService {
     return data;
   }
 
-  async createUserProfile(
-    profile: Omit<User, "id" | "created_at" | "updated_at">
-  ) {
+  async createUserProfile(profile: Omit<User, "created_at" | "updated_at">) {
     const { data, error } = await supabase
       .from("users")
       .insert(profile)
