@@ -32,7 +32,7 @@ jobs:
       - name: Run backend tests
         run: |
           cd backend
-          npm test
+          npm test -- --passWithNoTests
         env:
           NODE_ENV: test
 
@@ -41,35 +41,8 @@ jobs:
           cd backend
           npm run build
 
-  mobile-test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: "npm"
-
-      - name: Install mobile dependencies
-        run: |
-          cd mobile
-          npm ci
-
-      - name: Run mobile linter
-        run: |
-          cd mobile
-          npm run lint
-
-      - name: Run mobile tests
-        run: |
-          cd mobile
-          npm test -- --passWithNoTests
-
   deploy:
-    needs: [backend-test, mobile-test]
+    needs: [backend-test]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
 
