@@ -1,9 +1,10 @@
 {
   "version": 2,
   "name": "fitforge-api",
+  "buildCommand": "npm run build",
   "builds": [
     {
-      "src": "dist/index.js",
+      "src": "package.json",
       "use": "@vercel/node"
     }
   ],
