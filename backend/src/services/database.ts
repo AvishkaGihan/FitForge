@@ -1,5 +1,13 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { logger } from "../utils/logger";
+import {
+  User,
+  WorkoutPlan,
+  ExerciseFilters,
+  WorkoutSession,
+  UserProfileUpdate,
+  WorkoutSessionCompletion,
+} from "../types/index";
 
 const supabaseUrl = process.env.SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -36,7 +44,9 @@ export class DatabaseService {
     return data;
   }
 
-  async createUserProfile(profile: any) {
+  async createUserProfile(
+    profile: Omit<User, "id" | "created_at" | "updated_at">
+  ) {
     const { data, error } = await supabase
       .from("users")
       .insert(profile)
@@ -50,7 +60,7 @@ export class DatabaseService {
     return data;
   }
 
-  async updateUserProfile(userId: string, updates: any) {
+  async updateUserProfile(userId: string, updates: UserProfileUpdate) {
     const { data, error } = await supabase
       .from("users")
       .update({ ...updates, updated_at: new Date().toISOString() })
@@ -66,7 +76,7 @@ export class DatabaseService {
   }
 
   // Workout operations
-  async createWorkoutPlan(workoutPlan: any) {
+  async createWorkoutPlan(workoutPlan: Omit<WorkoutPlan, "id" | "created_at">) {
     const { data, error } = await supabase
       .from("workout_plans")
       .insert(workoutPlan)
@@ -153,7 +163,7 @@ export class DatabaseService {
     return data;
   }
 
-  async searchExercises(filters: any) {
+  async searchExercises(filters: ExerciseFilters) {
     let query = supabase.from("exercises").select("*");
 
     if (filters.muscle_groups?.length) {
@@ -178,7 +188,9 @@ export class DatabaseService {
   }
 
   // Workout session operations
-  async createWorkoutSession(session: any) {
+  async createWorkoutSession(
+    session: Omit<WorkoutSession, "id" | "completed_at">
+  ) {
     const { data, error } = await supabase
       .from("workout_sessions")
       .insert(session)
@@ -192,7 +204,10 @@ export class DatabaseService {
     return data;
   }
 
-  async completeWorkoutSession(sessionId: string, completionData: any) {
+  async completeWorkoutSession(
+    sessionId: string,
+    completionData: WorkoutSessionCompletion
+  ) {
     const { data, error } = await supabase
       .from("workout_sessions")
       .update({

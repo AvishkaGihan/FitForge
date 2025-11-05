@@ -2,15 +2,25 @@ import { Request, Response, NextFunction } from "express";
 import { logger } from "../utils/logger";
 import { ZodError } from "zod";
 
+interface CustomError extends Error {
+  code?: string;
+  statusCode?: number;
+}
+
 export const errorHandler = (
-  err: any,
+  err: Error | ZodError | CustomError | unknown,
   req: Request,
   res: Response,
   _next: NextFunction
 ): void => {
+  const errorObj = err as CustomError;
+
   logger.error("Error:", {
-    message: err.message,
-    stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
+    message: errorObj instanceof Error ? errorObj.message : "Unknown error",
+    stack:
+      process.env.NODE_ENV === "development" && errorObj instanceof Error
+        ? errorObj.stack
+        : undefined,
     path: req.path,
     method: req.method,
   });
@@ -28,31 +38,34 @@ export const errorHandler = (
   }
 
   // Supabase errors
-  if (err.code) {
-    if (err.code === "PGRST116") {
+  if (errorObj.code) {
+    if (errorObj.code === "PGRST116") {
       res.status(404).json({ error: "Resource not found" });
       return;
     }
-    if (err.code === "23505") {
+    if (errorObj.code === "23505") {
       res.status(409).json({ error: "Resource already exists" });
       return;
     }
   }
 
   // JWT errors
-  if (err.name === "JsonWebTokenError") {
+  if (errorObj.name === "JsonWebTokenError") {
     res.status(401).json({ error: "Invalid token" });
     return;
   }
-  if (err.name === "TokenExpiredError") {
+  if (errorObj.name === "TokenExpiredError") {
     res.status(401).json({ error: "Token expired" });
     return;
   }
 
   // Default error
-  const statusCode = err.statusCode || 500;
+  const statusCode = errorObj.statusCode || 500;
+  const message =
+    errorObj instanceof Error ? errorObj.message : "Internal server error";
   res.status(statusCode).json({
-    error: err.message || "Internal server error",
-    ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
+    error: message,
+    ...(process.env.NODE_ENV === "development" &&
+      errorObj instanceof Error && { stack: errorObj.stack }),
   });
 };
