@@ -35,8 +35,9 @@ export function WorkoutsListScreen() {
       setError(null);
       const data = await api.getUserWorkouts(20);
       setWorkouts(Array.isArray(data) ? data : []);
-    } catch (err: any) {
-      setError(err.message || 'Failed to fetch workouts');
+    } catch (err) {
+      const error = err as { message?: string };
+      setError(error.message || 'Failed to fetch workouts');
       console.error('Error loading workouts:', err);
     } finally {
       setLoading(false);

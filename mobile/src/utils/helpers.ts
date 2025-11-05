@@ -64,7 +64,7 @@ export function sanitizeInput(input: string): string {
   return input.trim().replace(/[<>]/g, '').substring(0, 500);
 }
 
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {

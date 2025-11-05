@@ -17,7 +17,11 @@ export function EmptyState({ icon, title, description, actionLabel, onAction }: 
 
   return (
     <View style={styles.container}>
-      <MaterialCommunityIcons name={icon as any} size={64} color={colors.textSecondary} />
+      <MaterialCommunityIcons
+        name={icon as React.ComponentProps<typeof MaterialCommunityIcons>['name']}
+        size={64}
+        color={colors.textSecondary}
+      />
       <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
       <Text style={[styles.description, { color: colors.textSecondary }]}>{description}</Text>
       {actionLabel && onAction && (

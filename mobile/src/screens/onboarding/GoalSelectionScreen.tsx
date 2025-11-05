@@ -16,7 +16,8 @@ export function GoalSelectionScreen() {
 
   function handleNext() {
     if (selectedGoal) {
-      (navigation.navigate as any)('FitnessLevel', { goal: selectedGoal });
+      const nav = navigation.navigate as (name: string, params: unknown) => void;
+      nav('FitnessLevel', { goal: selectedGoal });
     }
   }
 

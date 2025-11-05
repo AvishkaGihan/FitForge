@@ -38,7 +38,7 @@ export const storage = {
   },
 
   // Regular storage for non-sensitive data
-  async set(key: string, value: any): Promise<void> {
+  async set(key: string, value: unknown): Promise<void> {
     try {
       const jsonValue = JSON.stringify(value);
       await AsyncStorage.setItem(key, jsonValue);
@@ -86,11 +86,11 @@ export const storage = {
     await this.deleteSecure(STORAGE_KEYS.AUTH_TOKEN);
   },
 
-  async setUserData(user: any): Promise<void> {
+  async setUserData(user: unknown): Promise<void> {
     await this.set(STORAGE_KEYS.USER_DATA, user);
   },
 
-  async getUserData(): Promise<any> {
+  async getUserData(): Promise<unknown> {
     return await this.get(STORAGE_KEYS.USER_DATA);
   },
 

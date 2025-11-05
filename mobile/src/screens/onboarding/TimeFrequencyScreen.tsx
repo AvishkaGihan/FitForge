@@ -16,7 +16,8 @@ export function TimeFrequencyScreen() {
 
   function handleNext() {
     if (selectedTime && selectedDays) {
-      (navigation.navigate as any)('Preferences', {
+      const nav = navigation.navigate as (name: string, params: unknown) => void;
+      nav('Preferences', {
         ...route.params,
         timePerWorkout: selectedTime,
         daysPerWeek: selectedDays,

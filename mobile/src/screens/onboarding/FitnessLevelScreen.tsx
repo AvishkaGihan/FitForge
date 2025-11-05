@@ -24,7 +24,8 @@ export function FitnessLevelScreen() {
 
   function handleNext() {
     if (selectedLevel && selectedEquipment.length > 0) {
-      (navigation.navigate as any)('TimeFrequency', {
+      const nav = navigation.navigate as (name: string, params: unknown) => void;
+      nav('TimeFrequency', {
         ...route.params,
         level: selectedLevel,
         equipment: selectedEquipment,
