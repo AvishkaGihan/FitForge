@@ -122,10 +122,10 @@ npx expo start
 ## 📸 Screenshots
 
 <div align="center">
-  <img src="./docs/screenshots/login.png" width="200" alt="Login"/>
-  <img src="./docs/screenshots/dashboard.png" width="200" alt="Dashboard"/>
-  <img src="./docs/screenshots/workout.png" width="200" alt="Workout"/>
-  <img src="./docs/screenshots/chat.png" width="200" alt="AI Chat"/>
+  <img src="./docs/screenshots/login.jpg" width="200" alt="Login"/>
+  <img src="./docs/screenshots/dashboard.jpg" width="200" alt="Dashboard"/>
+  <img src="./docs/screenshots/workout.jpg" width="200" alt="Workout"/>
+  <img src="./docs/screenshots/chat.jpg" width="200" alt="AI Chat"/>
 </div>
 
 ## 🏗️ Architecture

@@ -9,9 +9,9 @@ export default {
     icon: './assets/icon.png',
     userInterfaceStyle: 'dark',
     splash: {
-      image: './assets/splash.png',
+      image: './assets/splash-icon.png',
       resizeMode: 'contain',
-      backgroundColor: '#1A1A1D',
+      backgroundColor: '#000000',
     },
     updates: {
       fallbackToCacheTimeout: 0,
@@ -48,5 +48,20 @@ export default {
         projectId: 'your-eas-project-id',
       },
     },
+
+    plugins: [
+      'expo-secure-store',
+      'expo-local-authentication',
+      [
+        'expo-font',
+        {
+          fonts: [
+            './assets/fonts/Inter-Regular.ttf',
+            './assets/fonts/Inter-Bold.ttf',
+            './assets/fonts/Inter-SemiBold.ttf',
+          ],
+        },
+      ],
+    ],
   },
 };
