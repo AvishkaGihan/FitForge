@@ -82,8 +82,9 @@ export function ActiveWorkoutScreen() {
         onPress: async () => {
           try {
             await completeWorkout('Great workout!', timeElapsed);
-            (navigation.navigate as any)('WorkoutComplete', { sessionId: 'temp' });
-          } catch (error) {
+            const nav = navigation.navigate as (name: string, params: unknown) => void;
+            nav('WorkoutComplete', { sessionId: 'temp' });
+          } catch {
             Alert.alert('Error', 'Failed to complete workout');
           }
         },

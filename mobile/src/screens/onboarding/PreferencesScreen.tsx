@@ -46,7 +46,8 @@ export function PreferencesScreen() {
   }
 
   function handleNext() {
-    (navigation.navigate as any)('ProfileSummary', {
+    const nav = navigation.navigate as (name: string, params: unknown) => void;
+    nav('ProfileSummary', {
       ...route.params,
       restrictions,
       avoidedExercises,

@@ -26,25 +26,37 @@ interface WorkoutPlan {
 }
 
 // Type guard function to validate workout plan structure
-function isValidWorkoutPlan(obj: any): obj is WorkoutPlan {
-  return (
-    obj &&
-    typeof obj === "object" &&
-    typeof obj.name === "string" &&
-    obj.name.trim().length > 0 &&
-    typeof obj.estimatedDuration === "number" &&
-    obj.estimatedDuration > 0 &&
-    Array.isArray(obj.exercises) &&
-    obj.exercises.length > 0 &&
-    obj.exercises.every(
-      (exercise: any) =>
-        exercise &&
-        typeof exercise.name === "string" &&
-        typeof exercise.sets === "number" &&
-        typeof exercise.reps === "string" &&
-        typeof exercise.rest === "number"
-    )
-  );
+function isValidWorkoutPlan(obj: unknown): obj is WorkoutPlan {
+  if (!obj || typeof obj !== "object") {
+    return false;
+  }
+
+  const plan = obj as Record<string, unknown>;
+
+  if (
+    typeof plan.name !== "string" ||
+    plan.name.trim().length === 0 ||
+    typeof plan.estimatedDuration !== "number" ||
+    plan.estimatedDuration <= 0 ||
+    !Array.isArray(plan.exercises) ||
+    plan.exercises.length === 0
+  ) {
+    return false;
+  }
+
+  return plan.exercises.every((exercise: unknown) => {
+    if (!exercise || typeof exercise !== "object") {
+      return false;
+    }
+
+    const ex = exercise as Record<string, unknown>;
+    return (
+      typeof ex.name === "string" &&
+      typeof ex.sets === "number" &&
+      typeof ex.reps === "string" &&
+      typeof ex.rest === "number"
+    );
+  });
 }
 
 export class WorkoutGeneratorService {

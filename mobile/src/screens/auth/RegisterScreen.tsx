@@ -26,7 +26,12 @@ export function RegisterScreen() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<any>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  interface ValidationError {
+    errors?: Array<{ path: (string | number)[]; message: string }>;
+    message?: string;
+  }
 
   async function handleRegister() {
     try {
@@ -35,15 +40,16 @@ export function RegisterScreen() {
 
       setLoading(true);
       await register(email, password);
-    } catch (error: any) {
-      if (error.errors) {
-        const fieldErrors: any = {};
-        error.errors.forEach((err: any) => {
-          fieldErrors[err.path[0]] = err.message;
+    } catch (error) {
+      const err = error as ValidationError;
+      if (err.errors) {
+        const fieldErrors: Record<string, string> = {};
+        err.errors.forEach(e => {
+          fieldErrors[String(e.path[0])] = e.message;
         });
         setErrors(fieldErrors);
       } else {
-        Alert.alert('Registration Failed', error.message);
+        Alert.alert('Registration Failed', err.message || 'An error occurred');
       }
     } finally {
       setLoading(false);

@@ -20,7 +20,7 @@ export function AppNavigator() {
   const { isAuthenticated, loading } = useAuth();
   const [onboardingComplete, setOnboardingComplete] = React.useState<boolean | null>(null);
   const [showSplash, setShowSplash] = React.useState(true);
-  const navigationRef = React.useRef<any>(null);
+  const navigationRef = React.useRef<unknown>(null);
 
   React.useEffect(() => {
     checkOnboarding();
@@ -40,18 +40,21 @@ export function AppNavigator() {
     if (!showSplash && navigationRef.current) {
       setTimeout(() => {
         try {
+          const nav = navigationRef.current as {
+            reset: (options: { index: number; routes: Array<{ name: string }> }) => void;
+          };
           if (!isAuthenticated) {
-            navigationRef.current.reset({
+            nav.reset({
               index: 0,
               routes: [{ name: 'Login' }],
             });
           } else if (!onboardingComplete) {
-            navigationRef.current.reset({
+            nav.reset({
               index: 0,
               routes: [{ name: 'GoalSelection' }],
             });
           } else {
-            navigationRef.current.reset({
+            nav.reset({
               index: 0,
               routes: [{ name: 'Main' }],
             });
@@ -73,7 +76,7 @@ export function AppNavigator() {
   }
 
   return (
-    <NavigationContainer ref={navigationRef}>
+    <NavigationContainer ref={navigationRef as never}>
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Splash">
         <Stack.Screen name="Splash" component={SplashScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />

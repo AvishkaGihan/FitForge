@@ -1,5 +1,6 @@
 import { Pinecone } from "@pinecone-database/pinecone";
 import { logger } from "../utils/logger";
+import { Exercise } from "../types/index.js";
 
 export class PineconeService {
   private client: Pinecone | null = null;
@@ -29,7 +30,7 @@ export class PineconeService {
   async searchSimilarExercises(
     query: string,
     topK: number = 5,
-    filters?: Record<string, any>
+    filters?: Record<string, string | number | boolean>
   ) {
     if (!this.client) {
       logger.warn("Pinecone not configured, using fallback search");
@@ -65,7 +66,7 @@ export class PineconeService {
       .map(() => Math.random());
   }
 
-  async upsertExercise(exercise: any) {
+  async upsertExercise(exercise: Exercise) {
     if (!this.client) return;
 
     try {

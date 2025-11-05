@@ -26,7 +26,12 @@ export function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<any>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  interface ValidationError {
+    errors?: Array<{ path: (string | number)[]; message: string }>;
+    message?: string;
+  }
 
   async function handleLogin() {
     try {
@@ -35,15 +40,16 @@ export function LoginScreen() {
 
       setLoading(true);
       await login(email, password);
-    } catch (error: any) {
-      if (error.errors) {
-        const fieldErrors: any = {};
-        error.errors.forEach((err: any) => {
-          fieldErrors[err.path[0]] = err.message;
+    } catch (error) {
+      const err = error as ValidationError;
+      if (err.errors) {
+        const fieldErrors: Record<string, string> = {};
+        err.errors.forEach(e => {
+          fieldErrors[String(e.path[0])] = e.message;
         });
         setErrors(fieldErrors);
       } else {
-        Alert.alert('Login Failed', error.message);
+        Alert.alert('Login Failed', err.message || 'An error occurred');
       }
     } finally {
       setLoading(false);
@@ -53,8 +59,9 @@ export function LoginScreen() {
   async function handleBiometricLogin() {
     try {
       await loginWithBiometric();
-    } catch (error: any) {
-      Alert.alert('Biometric Login Failed', error.message);
+    } catch (error) {
+      const err = error as { message?: string };
+      Alert.alert('Biometric Login Failed', err.message || 'An error occurred');
     }
   }
 

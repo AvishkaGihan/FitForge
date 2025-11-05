@@ -97,16 +97,18 @@ export function DashboardScreen() {
             <View style={styles.workoutActions}>
               <Button
                 title="Start Workout"
-                onPress={() =>
-                  (navigation.navigate as any)('ActiveWorkout', { workoutId: workout.id })
-                }
+                onPress={() => {
+                  const nav = navigation.navigate as (name: string, params: unknown) => void;
+                  nav('ActiveWorkout', { workoutId: workout.id });
+                }}
                 style={{ flex: 1 }}
               />
               <Button
                 title="View Details"
-                onPress={() =>
-                  (navigation.navigate as any)('WorkoutDetail', { workoutId: workout.id })
-                }
+                onPress={() => {
+                  const nav = navigation.navigate as (name: string, params: unknown) => void;
+                  nav('WorkoutDetail', { workoutId: workout.id });
+                }}
                 variant="outline"
                 style={{ flex: 1 }}
               />

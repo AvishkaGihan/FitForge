@@ -20,8 +20,9 @@ export function useWorkout(workoutId?: string) {
     try {
       const data = await api.getWorkout(id);
       setWorkout(data);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      const error = err as { message?: string };
+      setError(error.message || 'Failed to load workout');
     } finally {
       setLoading(false);
     }
@@ -35,8 +36,9 @@ export function useWorkout(workoutId?: string) {
       const data = await api.generateWorkout();
       setWorkout(data);
       return data;
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      const error = err as { message?: string };
+      setError(error.message || 'Failed to generate workout');
       throw err;
     } finally {
       setLoading(false);
@@ -51,8 +53,9 @@ export function useWorkout(workoutId?: string) {
         feedback,
         total_duration: duration,
       });
-    } catch (err: any) {
-      throw new Error(err.message);
+    } catch (err) {
+      const error = err as { message?: string };
+      throw new Error(error.message || 'Failed to complete workout');
     }
   }
 

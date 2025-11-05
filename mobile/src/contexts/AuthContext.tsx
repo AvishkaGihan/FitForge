@@ -66,8 +66,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       setUser(response.user);
       setSession(response.session);
-    } catch (error: any) {
-      throw new Error(error.response?.data?.error || 'Login failed');
+    } catch (error) {
+      const apiError = error as { response?: { data?: { error?: string } } };
+      throw new Error(apiError.response?.data?.error || 'Login failed');
     }
   }
 
@@ -81,8 +82,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       setUser(response.user);
       setSession(response.session);
-    } catch (error: any) {
-      throw new Error(error.response?.data?.error || 'Registration failed');
+    } catch (error) {
+      const apiError = error as { response?: { data?: { error?: string } } };
+      throw new Error(apiError.response?.data?.error || 'Registration failed');
     }
   }
 
@@ -116,8 +118,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         throw new Error('Biometric authentication failed');
       }
-    } catch (error: any) {
-      throw new Error(error.message || 'Biometric login failed');
+    } catch (error) {
+      const bioError = error as { message?: string };
+      throw new Error(bioError.message || 'Biometric login failed');
     }
   }
 

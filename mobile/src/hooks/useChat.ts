@@ -49,10 +49,11 @@ export function useChat() {
       };
 
       setMessages(prev => [...prev, aiMessage]);
-    } catch (err: any) {
+    } catch (err) {
       // Remove optimistic message on error
       setMessages(prev => prev.filter(m => m.id !== tempUserMessage.id));
-      throw new Error(err.message);
+      const error = err as { message?: string };
+      throw new Error(error.message || 'Failed to send message');
     } finally {
       setSending(false);
     }

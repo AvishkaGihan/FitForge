@@ -72,7 +72,7 @@ class ApiClient {
     return data;
   }
 
-  async updateProfile(updates: any) {
+  async updateProfile(updates: Record<string, unknown>) {
     const { data } = await this.client.patch('/user/profile', updates);
     return data;
   }
@@ -103,7 +103,7 @@ class ApiClient {
     return data;
   }
 
-  async completeWorkout(id: string, completionData: any) {
+  async completeWorkout(id: string, completionData: Record<string, unknown>) {
     const { data } = await this.client.post(`/workouts/${id}/complete`, completionData);
     return data;
   }
@@ -125,7 +125,7 @@ class ApiClient {
     return data;
   }
 
-  async searchExercises(filters: any) {
+  async searchExercises(filters: Record<string, unknown>) {
     const { data } = await this.client.get('/exercises/search', { params: filters });
     return data;
   }

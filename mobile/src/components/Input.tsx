@@ -30,7 +30,7 @@ export function Input({ label, error, icon, secureTextEntry, style, ...props }: 
       >
         {icon && (
           <MaterialCommunityIcons
-            name={icon as any}
+            name={icon as React.ComponentProps<typeof MaterialCommunityIcons>['name']}
             size={20}
             color={colors.textSecondary}
             style={styles.icon}

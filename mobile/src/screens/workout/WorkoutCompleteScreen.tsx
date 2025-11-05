@@ -86,7 +86,7 @@ export function WorkoutCompleteScreen() {
                 onPress={() => setSelectedDifficulty(option.value)}
               >
                 <MaterialCommunityIcons
-                  name={option.icon as any}
+                  name={option.icon as React.ComponentProps<typeof MaterialCommunityIcons>['name']}
                   size={40}
                   color={selectedDifficulty === option.value ? option.color : colors.textSecondary}
                 />

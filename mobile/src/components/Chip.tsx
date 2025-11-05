@@ -29,7 +29,7 @@ export function Chip({ label, selected = false, onPress, icon, style }: ChipProp
     >
       {icon && (
         <MaterialCommunityIcons
-          name={icon as any}
+          name={icon as React.ComponentProps<typeof MaterialCommunityIcons>['name']}
           size={16}
           color={selected ? '#FFFFFF' : colors.textSecondary}
           style={styles.icon}

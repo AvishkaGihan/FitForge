@@ -10,12 +10,23 @@ import { Card } from '@/components/Card';
 import { api } from '@/services/api';
 import { storage } from '@/utils/storage';
 
+interface ProfileParams {
+  goal: string;
+  level: string;
+  equipment: string[];
+  timePerWorkout: number;
+  daysPerWeek: number;
+  restrictions?: string;
+  avoidedExercises?: string[];
+  preferredExercises?: string[];
+}
+
 export function ProfileSummaryScreen() {
   const { colors } = useTheme();
   const navigation = useNavigation();
   const route = useRoute();
   const [loading, setLoading] = useState(false);
-  const params = route.params as any;
+  const params = route.params as unknown as ProfileParams;
 
   async function handleComplete() {
     try {
@@ -40,8 +51,9 @@ export function ProfileSummaryScreen() {
         index: 0,
         routes: [{ name: 'Main' as never }],
       });
-    } catch (error: any) {
-      Alert.alert('Error', error.message || 'Failed to save profile');
+    } catch (error) {
+      const err = error as { message?: string };
+      Alert.alert('Error', err.message || 'Failed to save profile');
     } finally {
       setLoading(false);
     }
