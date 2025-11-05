@@ -45,10 +45,9 @@ export default {
       supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL,
       supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
       eas: {
-        projectId: 'your-eas-project-id',
+        projectId: '4de5e5f9-b1e5-464f-a936-521bcd967494',
       },
     },
-
     plugins: [
       'expo-secure-store',
       'expo-local-authentication',
